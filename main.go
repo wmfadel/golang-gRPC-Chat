@@ -55,12 +55,12 @@ func (s *Server) BroadCastMessageZ(ctx context.Context, m *proto.Message) (*prot
 			defer w.Done()
 			if con.active {
 				err := con.stream.Send(m)
-				grpcLog.Info("Sending message to: ", conn.stream)
+				grpcLog.Info("Sending message to: ", con.stream)
 
 				if err != nil {
-					grpcLog.Errorf("Error with Stream: %v - Error: %v", conn.stream, err)
-					conn.active = false
-					conn.error <- err
+					grpcLog.Errorf("Error with Stream: %v - Error: %v", con.stream, err)
+					con.active = false
+					con.error <- err
 				}
 			}
 		}(m, conn)
@@ -91,4 +91,4 @@ func main() {
 	grpcServer.Serve(listener)
 }
 
-//--proto_path=proto --proto_path=third_party --go_out=plugins=grpc:proto service.proto
+//protoc --proto_path=proto --proto_path=third_party --go_out=plugins=grpc:proto service.proto
